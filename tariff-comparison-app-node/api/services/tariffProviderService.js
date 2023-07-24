@@ -1,6 +1,7 @@
-const fs = require('fs');
+const fs = require("fs/promises");
 
-exports.getExternalTariffData = () => {
-    const TariffProducts = fs.readFileSync('./externalTariffProvider.json');
-    return JSON.parse(TariffProducts);
+exports.getExternalTariffData = async() => {
+    const data = await fs.readFile("./externalTariffProvider.json");
+
+    return JSON.parse(data);
 };

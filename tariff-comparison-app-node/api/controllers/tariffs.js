@@ -1,41 +1,19 @@
-const MONTHES = 12;
-const CENT_MODIFIER = 0.01;
+const tariffsService = require('../services/tariffs');
+const errorMessages = require('../constants/errors');
 
-const tariffProviderService = require('../services/tariffProviderService')
+exports.calculateTariffs = (req, res, next) => {
+    try {
+        if (!req.body) return res.status(400)
 
-exports.calcAllTariffPlans = (consumption) => {
-    const tariffProducts = tariffProviderService.getExternalTariffData();
-    const calculatedAnnualCosts = [];
-
-    tariffProducts.map(product => {
-        if (product.type === 1) {
-            calculatedAnnualCosts.push({
-                name: product.name,
-                annualCost: calcBasicElectricyTariff(product.baseCost, product.additionalKwhCost, consumption)
+        tariffsService.calcAllTariffPlans(req.body.consumption).then(data => {
+            res.status(201).json({
+                consumption: data
             })
-        } else if (product.type === 2) {
-            calculatedAnnualCosts.push({
-                name: product.name,
-                annualCost: calcPackagedTariff(product.baseCost, product.additionalKwhCost, product.includedKwh, consumption)
-            })
-        }
-    })
-
-    return calculatedAnnualCosts;
-}
-
-const calcBasicElectricyTariff = (baseCost, additionalKwhCost, userConsumption) => {
-    return MONTHES * baseCost + userConsumption * (additionalKwhCost * CENT_MODIFIER);
-}
-
-const calcPackagedTariff = (baseCost, additionalCost, includedKwh, userConsumption) => {
-    let annualCost = 0;
-
-    if (userConsumption <= includedKwh) {
-        annualCost = baseCost
-    } else {
-        annualCost = (userConsumption - includedKwh) * (additionalCost * CENT_MODIFIER) + baseCost;
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: errorMessages.INTERNAL_ERROR,
+            data: { error }
+        })
     }
-
-    return annualCost;
 }
