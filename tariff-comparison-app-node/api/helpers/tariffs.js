@@ -1,24 +1,37 @@
 const { MONTHS, CENT_MODIFIER } = require("../constants/tariffs");
+const logger = require("../services/logger");
 
 exports.calcBasicElectricityTariff = (tariffData, userConsumption) => {
-    const annualCost =
-        MONTHS * tariffData.baseCost +
-        userConsumption * (tariffData.additionalKwhCost * CENT_MODIFIER);
-    return annualCost;
+    try {
+        const annualCost =
+            MONTHS * tariffData.baseCost +
+            userConsumption * (tariffData.additionalKwhCost * CENT_MODIFIER);
+        return annualCost;
+    } catch (error) {
+        logger.logger.error(error, "Error occured in calcBasicElectricityTariff");
+    }
 };
 
 exports.calcPackagedTariff = (tariffData, userConsumption) => {
-    const annualCost =
-        userConsumption <= tariffData.includedKwh ?
-        tariffData.baseCost :
-        calcOverspentPackagedTarrif(tariffData, userConsumption);
-    return annualCost;
+    try {
+        const annualCost =
+            userConsumption <= tariffData.includedKwh ?
+            tariffData.baseCost :
+            calcOverspentPackagedTarrif(tariffData, userConsumption);
+        return annualCost;
+    } catch (error) {
+        logger.logger.error(error, "Error occured in calcPackagedTariff");
+    }
 };
 
 const calcOverspentPackagedTarrif = (tariffData, userConsumption) => {
-    const annualCost =
-        (userConsumption - tariffData.includedKwh) *
-        (tariffData.additionalKwhCost * CENT_MODIFIER) +
-        tariffData.baseCost;
-    return annualCost;
+    try {
+        const annualCost =
+            (userConsumption - tariffData.includedKwh) *
+            (tariffData.additionalKwhCost * CENT_MODIFIER) +
+            tariffData.baseCost;
+        return annualCost;
+    } catch (error) {
+        logger.logger.error(error, "Error occured in calcOverspentPackagedTarrif");
+    }
 };
