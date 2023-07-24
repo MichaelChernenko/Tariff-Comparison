@@ -1,10 +1,10 @@
 const { MONTHS, CENT_MODIFIER } = require("../constants/tariffs");
 
 exports.calcBasicElectricityTariff = (tariffData, userConsumption) => {
-    return (
+    const annualCost =
         MONTHS * tariffData.baseCost +
-        userConsumption * (tariffData.additionalKwhCost * CENT_MODIFIER)
-    );
+        userConsumption * (tariffData.additionalKwhCost * CENT_MODIFIER);
+    return annualCost;
 };
 
 exports.calcPackagedTariff = (tariffData, userConsumption) => {

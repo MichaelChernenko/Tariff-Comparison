@@ -1,4 +1,4 @@
-const tariffProviderService = require("./tariffProviderService");
+const tariffProvider = require("../providers/tariffs");
 const tariffHelpers = require('../helpers/tariffs');
 
 const tariffCalculationMap = {
@@ -8,16 +8,12 @@ const tariffCalculationMap = {
 };
 
 exports.calcAllTariffPlans = async(consumption) => {
-    const tariffProducts = await tariffProviderService.getExternalTariffData();
-
-    console.log("KEKE", tariffProducts);
+    const tariffProducts = await tariffProvider.getExternalTariffData();
 
     const calculatedAnnualCosts = tariffProducts.map(
         ({ type, name, ...tariffData }) => {
             const calculationFunction = tariffCalculationMap[type];
             const annualCost = calculationFunction(tariffData, consumption);
-
-            console.log("TYPE", { annualCost, type, tariffData });
 
             return { name, annualCost };
         }

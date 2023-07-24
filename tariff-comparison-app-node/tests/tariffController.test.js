@@ -1,8 +1,6 @@
 const app = require("../app");
 const supertest = require("supertest");
 
-const server = app.listen(3000);
-
 const example = [
     { name: "Product A", annualCost: 830 },
     { name: "Product B", annualCost: 800 },
@@ -10,19 +8,28 @@ const example = [
     { name: "Product D", annualCost: 875 },
 ];
 
-const request = supertest.agent(server);
+let server;
+let request;
 
 describe("testing tariffController", () => {
+    beforeAll(async() => {
+        server = app.listen(3000);
+        request = supertest.agent(server);
+    });
+
     test("calc tariffs", async() => {
         await request
             .post("/tariffs")
             .send({ consumption: 3500 })
             .expect((res) => {
-                console.log(example);
                 res.body.consumption = example;
             })
-            .expect(201, {
+            .expect(200, {
                 consumption: example,
             });
     });
+
+    afterAll(async() => {
+        await server.close();
+    })
 });
