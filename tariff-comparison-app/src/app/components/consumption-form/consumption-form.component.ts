@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { HttpService } from 'src/app/services/http.service';
+import { Tariff } from '../../models/tariffs.model';
 
 @Component({
   selector: 'app-consumption-form',
@@ -10,7 +11,7 @@ import { HttpService } from 'src/app/services/http.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConsumptionFormComponent implements OnDestroy {
-  @Output() getCalculatedCosts = new EventEmitter<boolean>();
+  @Output() getCalculatedCosts = new EventEmitter<Array<Tariff>>();
 
   tariffForm: FormGroup;
   subscription$!: Subscription;
@@ -19,7 +20,7 @@ export class ConsumptionFormComponent implements OnDestroy {
     this.tariffForm = new FormGroup({
       userConsumption: new FormControl('', [
         Validators.required,
-        // Validators.pattern('^[0-9]*$'),
+        Validators.pattern('^[0-9]*$'),
         Validators.minLength(3),
       ]),
     });
@@ -33,7 +34,7 @@ export class ConsumptionFormComponent implements OnDestroy {
     const consumption = this.tariffForm.get('userConsumption')?.value;
     this.subscription$ = this.httpService.postConsumption(consumption)
       .subscribe({
-        next:(data:any) => {
+        next:(data: any) => {
           this.getCalculatedCosts.emit(data.consumption);
         },
         error: error => console.log(error)

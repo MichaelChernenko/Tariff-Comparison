@@ -11,7 +11,7 @@ export class AppComponent {
 
   constructor() {}
 
-  getCalculatedCosts(costs: any) {
+  getCalculatedCosts(costs: Array<Tariff>) {
     this.calculatedCosts = costs
   }
 }
