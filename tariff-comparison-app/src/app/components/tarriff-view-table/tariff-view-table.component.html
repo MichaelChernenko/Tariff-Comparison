@@ -1,0 +1,16 @@
+<table class="table table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Tariff Name</th>
+            <th>Annual Cost (€/year)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of annualCostData; let i = index">
+            <td>{{ i + 1}}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.annualCost }}</td>
+        </tr>
+    </tbody>
+</table>

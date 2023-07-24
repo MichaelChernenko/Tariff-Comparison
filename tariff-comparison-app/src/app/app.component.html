@@ -1,0 +1,6 @@
+<div class="wrapper bg-light container-fluid min-vh-100 d-flex align-items-center flex-column">
+    <div class="col-md-6 mx-auto text-center">
+        <app-consumption-form (getCalculatedCosts)="getCalculatedCosts($event)"></app-consumption-form>
+        <app-tariff-view-table class="m-5" *ngIf="calculatedCosts.length" [annualCostData]="calculatedCosts"></app-tariff-view-table>
+    </div>
+</div>
