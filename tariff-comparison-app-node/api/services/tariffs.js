@@ -1,60 +1,27 @@
 const tariffProviderService = require("./tariffProviderService");
-const tariffConstants = require("../constants/tariffs");
+const tariffHelpers = require('../helpers/tariffs');
+
+const tariffCalculationMap = {
+    1: (tariffData, consumption) =>
+        tariffHelpers.calcBasicElectricityTariff(tariffData, consumption),
+    2: (tariffData, consumption) => tariffHelpers.calcPackagedTariff(tariffData, consumption),
+};
 
 exports.calcAllTariffPlans = async(consumption) => {
-    const tariffProducts = tariffProviderService.getExternalTariffData();
-    const calculatedAnnualCosts = [];
+    const tariffProducts = await tariffProviderService.getExternalTariffData();
 
-    await tariffProducts.then((data) => {
-        data.map((product) => {
-            if (product.type === 1) {
-                calculatedAnnualCosts.push({
-                    name: product.name,
-                    annualCost: calcBasicElectricyTariff({
-                            baseCost: product.baseCost,
-                            additionalKwhCost: product.additionalKwhCost,
-                        },
-                        consumption
-                    ),
-                });
-            } else if (product.type === 2) {
-                calculatedAnnualCosts.push({
-                    name: product.name,
-                    annualCost: calcPackagedTariff({
-                            baseCost: product.baseCost,
-                            additionalKwhCost: product.additionalKwhCost,
-                            includedKwh: product.includedKwh,
-                        },
-                        consumption
-                    ),
-                });
-            }
-        });
-    });
+    console.log("KEKE", tariffProducts);
+
+    const calculatedAnnualCosts = tariffProducts.map(
+        ({ type, name, ...tariffData }) => {
+            const calculationFunction = tariffCalculationMap[type];
+            const annualCost = calculationFunction(tariffData, consumption);
+
+            console.log("TYPE", { annualCost, type, tariffData });
+
+            return { name, annualCost };
+        }
+    );
 
     return calculatedAnnualCosts;
-};
-
-exports.calcBasicElectricyTariff = (tariffData, userConsumption) => {
-    return (
-        tariffConstants.MONTHES * tariffData.baseCost +
-        userConsumption *
-        (tariffData.additionalKwhCost * tariffConstants.CENT_MODIFIER)
-    );
-};
-
-exports.calcPackagedTariff = (tariffData, userConsumption) => {
-    const annualCost =
-        userConsumption <= tariffData.includedKwh ?
-        tariffData.baseCost :
-        calcOverspentPackagedTarrif(tariffData, userConsumption);
-    return annualCost;
-};
-
-exports.calcOverspentPackagedTarrif = (tariffData, userConsumption) => {
-    const annualCost =
-        (userConsumption - tariffData.includedKwh) *
-        (tariffData.additionalKwhCost * tariffConstants.CENT_MODIFIER) +
-        tariffData.baseCost;
-    return annualCost;
 };
