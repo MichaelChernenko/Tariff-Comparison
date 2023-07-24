@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: ./tariff-comparison-app  # Path to the Angular frontend Dockerfile directory
+    ports:
+      - "80:80"  # Map container port 80 to host port 80 (adjust as needed)
+
+  backend:
+    build:
+      context: ./tariff-comparison-app-node  # Path to the Node.js backend Dockerfile directory
+    ports:
+      - "3000:3000"  # Map container port 3000 to host port 3000 (adjust as needed)
+    depends_on:
+      - frontend  # Ensure that the frontend service is up before starting the backend
