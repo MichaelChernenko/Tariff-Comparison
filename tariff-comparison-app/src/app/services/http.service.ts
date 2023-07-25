@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -9,11 +9,10 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  postConsumption(consumption: number): Observable<Object> {
-    const body = {
-      consumption: consumption
-    };
+  getConsumption(consumption: number): Observable<Object> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append('consumption',consumption);
 
-    return this.http.post('http://localhost:3000/tariffs', body)
+    return this.http.get('http://localhost:3000/tariffs', {params: queryParams})
   }
 }

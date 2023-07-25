@@ -32,7 +32,7 @@ export class ConsumptionFormComponent implements OnDestroy {
 
   submit(): void {
     const consumption = this.tariffForm.get('userConsumption')?.value;
-    this.subscription$ = this.httpService.postConsumption(consumption)
+    this.subscription$ = this.httpService.getConsumption(consumption)
       .subscribe({
         next:(data: any) => {
           this.getCalculatedCosts.emit(data.consumption);
