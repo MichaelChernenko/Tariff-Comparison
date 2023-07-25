@@ -1,14 +1,18 @@
-const Joi = require('joi');
+const Joi = require("joi");
+const { errorMessages } = require('../constants/errors')
 
-const consumptionSchema = Joi.object({
-    consumption: Joi.number()
-        .min(3)
-        .required()
-});
+exports.validateBody = (schema) => (req, res, next) => {
+    try {
+        const { value, error } = schema.validate(req.body, { abortEarly: false });
 
-function validateBody(req, res, next) {
-    console.log("Test", consumptionSchema.validate(req.body))
-    next(consumptionSchema.validate(req.body));
-}
+        if (error) {
+            throw new Error(errorMessages.VALIDATION_ERROR);
+        }
 
-module.exports = validateBody;
+        req.body = value;
+
+        return next();
+    } catch (err) {
+        return next(err);
+    }
+};
