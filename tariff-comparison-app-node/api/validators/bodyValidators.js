@@ -1,11 +1,11 @@
 const { errorMessages } = require("../constants/errors");
 const { logger } = require("../services/logger");
 
-exports.validateBody = (schema) => (req, res, next) => {
+exports.validateQuery = (schema) => (req, res, next) => {
     try {
-        const { value, error } = schema.validate(req.body, { abortEarly: false });
+        const { value, error } = schema.validate(req.query, { abortEarly: false });
 
-        logger.info({ value, error }, "Body validation");
+        logger.info({ value, error }, "Validation results");
 
         if (error) {
             throw new Error(errorMessages.VALIDATION_ERROR);

@@ -18,12 +18,12 @@ describe("Testing tariffController", () => {
     });
 
     test("Calculate tariffs", async() => {
-        const { body } = await request.post("/tariffs").send({ consumption: 3500 });
+        const { body } = await request.get(`/tariffs`).query({ consumption: 3500 });
 
-        expect(body.consumption).toEqual(example)
+        expect(body.consumption).toEqual(example);
     });
 
     afterAll(async() => {
         await server.close();
-    })
+    });
 });
