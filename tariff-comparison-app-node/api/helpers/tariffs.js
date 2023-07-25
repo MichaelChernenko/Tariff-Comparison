@@ -1,5 +1,5 @@
 const { MONTHS, CENT_MODIFIER } = require("../constants/tariffs");
-const logger = require("../services/logger");
+const { logger } = require("../services/logger");
 
 exports.calcBasicElectricityTariff = (tariffData, userConsumption) => {
     try {
@@ -8,7 +8,7 @@ exports.calcBasicElectricityTariff = (tariffData, userConsumption) => {
             userConsumption * (tariffData.additionalKwhCost * CENT_MODIFIER);
         return annualCost;
     } catch (error) {
-        logger.logger.error(error, "Error occured in calcBasicElectricityTariff");
+        logger.error(error, "Error occured in calcBasicElectricityTariff");
     }
 };
 
@@ -20,7 +20,7 @@ exports.calcPackagedTariff = (tariffData, userConsumption) => {
             calcOverspentPackagedTarrif(tariffData, userConsumption);
         return annualCost;
     } catch (error) {
-        logger.logger.error(error, "Error occured in calcPackagedTariff");
+        logger.error(error, "Error occured in calcPackagedTariff");
     }
 };
 
@@ -32,6 +32,6 @@ const calcOverspentPackagedTarrif = (tariffData, userConsumption) => {
             tariffData.baseCost;
         return annualCost;
     } catch (error) {
-        logger.logger.error(error, "Error occured in calcOverspentPackagedTarrif");
+        logger.error(error, "Error occured in calcOverspentPackagedTarrif");
     }
 };
