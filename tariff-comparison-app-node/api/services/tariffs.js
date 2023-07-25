@@ -1,14 +1,11 @@
-const tariffProvider = require("../providers/tariffs");
-const tariffHelpers = require('../helpers/tariffs');
-
-const tariffCalculationMap = {
-    1: (tariffData, consumption) =>
-        tariffHelpers.calcBasicElectricityTariff(tariffData, consumption),
-    2: (tariffData, consumption) => tariffHelpers.calcPackagedTariff(tariffData, consumption),
-};
+const { getExternalTariffData } = require("../providers/tariffs");
+const { tariffCalculationMap } = require("../helpers/tariffs");
+const { logger } = require("../services/logger");
 
 exports.calcAllTariffPlans = async(consumption) => {
-    const tariffProducts = await tariffProvider.getExternalTariffData();
+    const tariffProducts = await getExternalTariffData();
+
+    logger.debug({ tariffProducts }, "External tariff plans received");
 
     const calculatedAnnualCosts = tariffProducts.map(
         ({ type, name, ...tariffData }) => {
@@ -18,6 +15,8 @@ exports.calcAllTariffPlans = async(consumption) => {
             return { name, annualCost };
         }
     );
+
+    logger.debug({ calculatedAnnualCosts }, "Annual costs calculated");
 
     return calculatedAnnualCosts;
 };

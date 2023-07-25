@@ -11,22 +11,16 @@ const example = [
 let server;
 let request;
 
-describe("testing tariffController", () => {
-    beforeAll(async() => {
+describe("Testing tariffController", () => {
+    beforeAll(() => {
         server = app.listen(3000);
         request = supertest.agent(server);
     });
 
-    test("calc tariffs", async() => {
-        await request
-            .post("/tariffs")
-            .send({ consumption: 3500 })
-            .expect((res) => {
-                res.body.consumption = example;
-            })
-            .expect(200, {
-                consumption: example,
-            });
+    test("Calculate tariffs", async() => {
+        const { body } = await request.post("/tariffs").send({ consumption: 3500 });
+
+        expect(body.consumption).toEqual(example)
     });
 
     afterAll(async() => {

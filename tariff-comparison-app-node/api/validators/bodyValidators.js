@@ -1,15 +1,15 @@
-const Joi = require("joi");
-const { errorMessages } = require('../constants/errors')
+const { errorMessages } = require("../constants/errors");
+const { logger } = require("../services/logger");
 
 exports.validateBody = (schema) => (req, res, next) => {
     try {
         const { value, error } = schema.validate(req.body, { abortEarly: false });
 
+        logger.info({ value, error }, "Body validation");
+
         if (error) {
             throw new Error(errorMessages.VALIDATION_ERROR);
         }
-
-        req.body = value;
 
         return next();
     } catch (err) {
