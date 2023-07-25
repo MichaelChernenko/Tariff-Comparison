@@ -20,8 +20,7 @@ export class ConsumptionFormComponent implements OnDestroy {
     this.tariffForm = new FormGroup({
       userConsumption: new FormControl('', [
         Validators.required,
-        Validators.pattern('^[0-9]*$'),
-        Validators.minLength(3),
+        Validators.pattern('^[0-9]*$')
       ]),
     });
   }

@@ -7,7 +7,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of annualCostData; let i = index">
+        <tr *ngFor="let item of annualCostData; let i = index" [ngClass]="{'table-success': item.isBestPrice}">
             <td>{{ i + 1}}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.annualCost }}</td>

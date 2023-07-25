@@ -9,8 +9,6 @@ import { Tariff } from '../app/models/tariffs.model';
 export class AppComponent {
   calculatedCosts: Array<Tariff> = [];
 
-  constructor() {}
-
   getCalculatedCosts(costs: Array<Tariff>) {
     this.calculatedCosts = costs
   }
