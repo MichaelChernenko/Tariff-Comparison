@@ -1,4 +1,4 @@
-const { MONTHS, CENT_MODIFIER } = require("../constants/tariffs");
+const { MONTHS, CENT_MODIFIER, PRODUCT_TYPE } = require("../constants/tariffs");
 const { logger } = require("../services/logger");
 
 const calcBasicElectricityTariff = (tariffData, userConsumption) => {
@@ -25,9 +25,9 @@ const calcPackagedTariff = (tariffData, userConsumption) => {
 };
 
 const tariffCalculationMap = {
-    1: (tariffData, consumption) =>
+    [PRODUCT_TYPE.basicElectricityTariff]: (tariffData, consumption) =>
         calcBasicElectricityTariff(tariffData, consumption),
-    2: (tariffData, consumption) => calcPackagedTariff(tariffData, consumption),
+    [PRODUCT_TYPE.packagedTariff]: (tariffData, consumption) => calcPackagedTariff(tariffData, consumption),
 };
 
 const calcOverspentPackagedTariff = (tariffData, userConsumption) => {
